@@ -1,0 +1,122 @@
+<template>
+  <div id="app" oncontextmenu="return false">
+    <index-header></index-header>
+    <div class="router-view">
+      <router-view></router-view>
+    </div>
+    <loading :step="step" id="main-loading" @loading-end="LoadingEnd"></loading>
+  </div>
+</template>
+<style lang="scss">
+  $blue: '1b9de8';
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+  }
+  ul, li {
+    list-style: none;
+  }
+  .clearfix {
+    *zoom: 1;
+  }
+  .clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+  :focus {
+    outline: none;
+  }
+  a {
+    text-decoration: none;
+    outline: none;
+  }
+  #app, body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: '微软雅黑', 'Avenir', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #3a3a3a;
+  }
+  #app {
+    width: 100%;
+    height: 100%;
+    .router-view {
+      position: absolute;
+      top: 50px;
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+  }
+  .ms-button {
+    height: 30px;
+    line-height: 30px;
+    background: #fff;
+    color: #1f2d3d;
+    border-radius: 15px;
+    border: 1px solid #bfcbd9;
+    padding: 0 10px;
+    box-shadow: 0 4px 10px rgba(73,127,255,.42);
+    transition: .3s;
+    &:hover {
+      cursor: pointer;
+      border-color: $blue;
+      color: $blue;
+    }
+  }
+  .ms-button.primary {
+    background: #1b9de8;
+    border: 1px solid #1b9de8;
+    color: #fff;
+    &:hover {
+      background: #1aafff;
+      border-color: #1aafff;
+    }
+  }
+</style>
+<script>
+  import indexHeader from './components/ui/header'
+  import store from './store'
+  export default {
+    name: 'app',
+    mounted () {
+      document.onreadystatechange = () => {
+        if (document.readyState === 'complete') {
+          this.step = 1
+        }
+      }
+      window.onresize = () => {
+        return (() => {
+          this.resize()
+        })()
+      }
+    },
+    data () {
+      return {
+        step: 50
+      }
+    },
+    store,
+    watch: {
+      '$route': function (router) {
+      }
+    },
+    methods: {
+      resize () {
+      },
+      LoadingEnd () {
+        document.querySelector('#main-loading').style.display = 'none'
+      }
+    },
+    components: {
+      indexHeader
+    }
+  }
+</script>
