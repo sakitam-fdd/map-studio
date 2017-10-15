@@ -4,16 +4,16 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import filters from './filters/index'
-// 引入element-ui
-import Element from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
-
-// cu
 import Loading from './components/ui/loading'
+// 引入element-ui
+import { Button, Select, Tooltip } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.component(Button.name, Button)
+Vue.component(Select.name, Select)
+Vue.component(Tooltip.name, Tooltip)
 Vue.component(Loading.name, Loading)
 
 Vue.config.productionTip = false
-Vue.use(Element)
 for (let key in filters) {
   Vue.filter(key, filters[key])
 }

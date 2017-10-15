@@ -1,6 +1,5 @@
 <template>
   <div id="app" oncontextmenu="return false">
-    <index-header></index-header>
     <div class="router-view">
       <router-view></router-view>
     </div>
@@ -50,9 +49,8 @@
     height: 100%;
     .router-view {
       position: absolute;
-      top: 50px;
       width: 100%;
-      height: calc(100% - 50px);
+      height: 100%;
     }
   }
   .ms-button {
@@ -82,7 +80,6 @@
   }
 </style>
 <script>
-  import indexHeader from './components/ui/header'
   import store from './store'
   export default {
     name: 'app',
@@ -116,7 +113,6 @@
       }
     },
     components: {
-      indexHeader
     }
   }
 </script>

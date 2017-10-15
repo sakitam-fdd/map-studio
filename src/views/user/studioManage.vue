@@ -19,7 +19,8 @@
             </div>
           </div>
           <div class="main clearfix">
-            <div class="template-item" v-for="item in templates">
+            <div class="template-item"
+                 v-for="item in templates" @click="editMap(item)">
               <div class="img" :style="{backgroundImage: 'url(' + item['icon'] + ') no-repeat;'}"></div>
               <div class="info">
                 <div class="name">{{item.name}}</div>
@@ -36,6 +37,7 @@
   </div>
 </template>
 <script>
+  import router from '@/router'
   export default {
     data () {
       return {
@@ -46,10 +48,21 @@
         templates: [
           {
             name: '标准',
-            icon: 'http://lbs.amap.com/dev/config/mapstyle/img/normal.png',
-            info: '使用该模板'
+            icon: './static/images/normal.png',
+            info: '使用该模板',
+            styleId: 'normal'
           }
         ]
+      }
+    },
+    methods: {
+      editMap (item) {
+        if (item && item['styleId']) {
+          router.push({
+            name: 'studio',
+            id: item['styleId']
+          })
+        }
       }
     },
     components: {}
