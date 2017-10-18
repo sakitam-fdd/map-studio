@@ -6,13 +6,14 @@ import router from './router'
 import filters from './filters/index'
 import Loading from './components/ui/loading'
 // 引入element-ui
-import { Button, Select, Tooltip } from 'element-ui'
+import { Button, Select, Tooltip, Alert } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.component(Button.name, Button)
 Vue.component(Select.name, Select)
 Vue.component(Tooltip.name, Tooltip)
+Vue.component(Alert.name, Alert)
 Vue.component(Loading.name, Loading)
-
+Vue.prototype.$alert = Alert
 Vue.config.productionTip = false
 for (let key in filters) {
   Vue.filter(key, filters[key])

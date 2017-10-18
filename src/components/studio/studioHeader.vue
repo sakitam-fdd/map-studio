@@ -27,21 +27,21 @@
     </div>
     <div class="map-zoom">
       <span class="txt">缩放级别</span>
-      <span class="btn">
+      <span class="btn" @click="zoomAction(-1)">
         <i class="iconfont icon-suoxiao"></i>
       </span>
-      <input type="text" name="mapZoom" value="10">
-      <span class="btn">
+      <input type="text" name="mapZoom" v-model="zoom">
+      <span class="btn" @click="zoomAction(1)">
         <i class="iconfont icon-ziyuan"></i>
       </span>
     </div>
     <div class="map-center clearfix">
       <span>地图中心</span>
       <span class="txt-x">X</span>
-      <input type="text" value="116.335247">
+      <input type="text" v-model="center[0]">
       <span class="txt-y">Y</span>
-      <input type="text" value="39.913416">
-      <span class="mapicon-locate">
+      <input type="text" v-model="center[1]">
+      <span class="mapicon-locate" @click="getLocation()">
         <i class="iconfont icon-dingwei"></i>
       </span>
     </div>
@@ -60,6 +60,9 @@
   </div>
 </template>
 <script>
+  import {mapState} from 'vuex'
+  import $Easing from 'ol/easing'
+  import $Proj from 'ol/proj'
   export default {
     data () {
       return {
@@ -81,8 +84,15 @@
           }
         ],
         studioName: '自定义样式',
-        isActive: false
+        isActive: false,
+        duration_: 250
       }
+    },
+    computed: {
+      ...mapState({
+        center: state => state.studioHeader.center,
+        zoom: state => state.studioHeader.zoom
+      })
     },
     methods: {
       publish () {
@@ -94,6 +104,53 @@
       onblur () {
         console.log(this.studioName)
         this.isActive = false
+      },
+      zoomAction (delta) {
+        if (!this.$View) {
+          throw new Error('未获取到视图！')
+        } else {
+          let currentResolution = this.$View.getResolution()
+          if (currentResolution) {
+            let newResolution = this.$View.constrainResolution(currentResolution, delta)
+            if (this.duration_ > 0) {
+              if (this.$View.getAnimating()) {
+                this.$View.cancelAnimations()
+              }
+              this.$View.animate({
+                resolution: newResolution,
+                duration: this.duration_,
+                easing: $Easing.easeOut
+              })
+            } else {
+              this.$View.setResolution(newResolution)
+            }
+          }
+        }
+      },
+      getLocation () {
+        if (!navigator.geolocation) {
+          this.$alert('您的浏览器不支持地理位置', '用户提示', {
+            confirmButtonText: '确定'
+          })
+        } else {
+          navigator.geolocation.getCurrentPosition(this.locationSuccess, this.locationError)
+        }
+      },
+      locationSuccess (position) {
+        let longitude = position.coords.longitude
+        let latitude = position.coords.latitude
+        let sourceProj = this.$View.getProjection()
+        let location = $Proj.transform([longitude, latitude], 'EPSG:4326', sourceProj)
+        this.$View.animate({
+          center: location,
+          duration: 250,
+          easing: $Easing.easeOut
+        })
+      },
+      locationError () {
+        this.$alert('定位失败', '用户提示', {
+          confirmButtonText: '确定'
+        })
       }
     }
   }

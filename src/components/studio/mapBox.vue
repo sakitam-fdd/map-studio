@@ -52,19 +52,30 @@
             })
           ],
           view: new $View({
-            center: $Proj.fromLonLat([37.41, 8.82]),
+            center: $Proj.fromLonLat([113.534501, 34.441045]),
             zoom: 4
           })
         })
         Vue.prototype.$View = this.$Map.getView()
         this.$View.on('change:center', this.handelCenter_, this)
         this.$View.on('change:resolution', this.handelResolution_, this)
+        this.$store.dispatch('actionMapCenter', this.fixCenter(this.$View.getCenter()))
+        this.$store.dispatch('actionMapZoom', Math.ceil(4))
       },
       handelCenter_ (event) {
-        console.log(event)
+        let center = event.target.getCenter()
+        let centerProj = this.fixCenter(center)
+        this.$store.dispatch('actionMapCenter', centerProj)
+      },
+      fixCenter (center) {
+        let sourceProj = this.$View.getProjection()
+        let c1 = $Proj.transform(center, sourceProj, 'EPSG:4326')
+        let centerProj = [c1[0].toFixed(6), c1[1].toFixed(6)]
+        return centerProj
       },
       handelResolution_ (event) {
-        console.log(event)
+        let zoom = event.target.getZoom()
+        this.$store.dispatch('actionMapZoom', Math.ceil(zoom))
       }
     }
   }
