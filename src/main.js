@@ -14,6 +14,7 @@ Vue.component(Tooltip.name, Tooltip)
 Vue.component(Alert.name, Alert)
 Vue.component(Loading.name, Loading)
 Vue.prototype.$alert = Alert
+Vue.prototype.$Config = config
 Vue.config.productionTip = false
 for (let key in filters) {
   Vue.filter(key, filters[key])
