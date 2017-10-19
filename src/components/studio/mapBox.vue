@@ -60,6 +60,7 @@
         let map = new MapBoxStyle(this.$Map, layer, this.$Config.services.$StyleUrl + this.$Config.services.$key)
         console.log(map)
         Vue.prototype.$View = this.$Map.getView()
+        this.$Map.on('click', this.handleMapClick_, this)
         this.$View.on('change:center', this.handelCenter_, this)
         this.$View.on('change:resolution', this.handelResolution_, this)
         this.$store.dispatch('actionMapCenter', this.fixCenter(this.$View.getCenter()))
@@ -79,6 +80,18 @@
       handelResolution_ (event) {
         let zoom = event.target.getZoom()
         this.$store.dispatch('actionMapZoom', Math.ceil(zoom))
+      },
+      handleMapClick_ (event) {
+        console.log(event)
+        if (event && event.pixel) {
+          let feature = this.$Map.forEachFeatureAtPixel(event.pixel, function (feature) {
+            return feature
+          })
+          if (feature) {
+            let attr = feature.getProperties()
+            console.log(attr)
+          }
+        }
       }
     }
   }
