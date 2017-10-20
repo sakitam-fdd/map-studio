@@ -1,32 +1,57 @@
 import $Overlay from 'ol/overlay'
 import $GeomPoint from 'ol/geom/point'
 class Popover extends $Overlay {
-  constructor (options = {}) {
-    let element = options['element']
+  constructor (map, options = {}) {
+    let element = document.createElement('div')
+    element.className = options['className'] ? options['className'] : 'popover-content'
     let stopEvent = true
     let offset = options['offset']
     let insertFirst = true
     let id = options['id']
-    super(element, stopEvent, offset, id, insertFirst)
+    if (options['element'] instanceof HTMLElement) {
+      element.innerHTML = ''
+      element.appendChild(options['element'])
+    } else {
+      element.innerHTML = options['element']
+    }
+    super({
+      element: element,
+      stopEvent: stopEvent,
+      offset: offset,
+      id: id,
+      insertFirst: insertFirst,
+      positioning: options['positioning'] ? options['positioning'] : 'top-left'
+    })
+    this.map = map
+    this.options = options
+    this.show(options, element)
   }
 
-  updateSize () {
-    this.container.style.marginLeft = (-this.container.clientWidth / 2) - 1 + 'px'
-    this.container.style.display = 'block'
-    this.container.style.opacity = 1
-    this.content.scrollTop = 0
+  /**
+   * 更新size
+   * @param element
+   * @returns {Popover}
+   */
+  updateSize (element) {
+    // element.style.marginLeft = (-element.clientWidth / 2) - 1 + 'px'
     this.map.render()
-    return this
   }
 
+  /**
+   * 移除popover
+   */
   removePopover () {
-    this.container.style.display = 'none'
     if (this && this.options['id']) {
       this.map.removeOverlay(this)
     }
-    return this
   }
-  show (options) {
+
+  /**
+   * 显示气泡
+   * @param options
+   * @param element
+   */
+  show (options, element) {
     let center = []
     if (options['dataProjection'] && options['featureProjection']) {
       let geom = new $GeomPoint(options['center'])
@@ -34,21 +59,11 @@ class Popover extends $Overlay {
     } else {
       center = options['center']
     }
-    if (options['element'] instanceof HTMLElement) {
-      this.content.innerHTML = ''
-      this.content.appendChild(options['element'])
-    } else {
-      this.content.innerHTML = options['element']
-    }
-    this.container.style.display = 'block'
-    this.content.scrollTop = 0
     if (options['properties']) {
       this.setProperties(options['properties'])
     }
-    this.setOffset(options['offset'])
     this.setPosition(center)
-    this.updateSize()
-    return this
+    this.updateSize(element)
   }
 }
 export default Popover

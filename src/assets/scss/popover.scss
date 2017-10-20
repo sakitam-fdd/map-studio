@@ -1,0 +1,18 @@
+.ol-selectable {
+  -webkit-touch-callout: default;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+.ol-overlay-container {
+  will-change: left,right,top,bottom;
+}
+.popover-content {
+  position: absolute;
+  left: -100px;
+  background-color: white;
+  bottom: 0;
+  min-width: 100px;
+  max-width: 400px;
+}

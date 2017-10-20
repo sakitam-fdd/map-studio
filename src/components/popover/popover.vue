@@ -14,9 +14,14 @@
     name: 'header',
     data () {
       return {
-        header: {
-          title: '',
-          devTitle: ''
+        items: {},
+        params: {}
+      }
+    },
+    watch: {
+      params: function (value) {
+        if (value && value['items']) {
+          this.items = value['items']
         }
       }
     },
@@ -29,7 +34,6 @@
 </script>
 <style lang="scss">
   .map-popover-box {
-    position: relative;
     background: #212020;
     border-radius: 2px;
     box-shadow: 0 0 9px #000;
@@ -65,6 +69,28 @@
           background: #019cfa;
         }
       }
+    }
+    &:before {
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      content: '';
+      display: inline-block;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 14px solid #212020;
+      transform: translate(-50%, 0)
+    }
+    &:after {
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      content: '';
+      display: inline-block;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 14px solid #212020;
+      transform: translate(-50%, 0)
     }
   }
 </style>

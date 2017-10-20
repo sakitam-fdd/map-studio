@@ -8,6 +8,7 @@
 </template>
 <style lang="scss">
   $blue: '1b9de8';
+  @import url(./assets/scss/popover.scss);
   * {
     box-sizing: border-box;
     margin: 0;

@@ -12,6 +12,8 @@
   import $FormatMvt from 'ol/format/mvt'
   import $Proj from 'ol/proj'
   import MapBoxStyle from '../../assets/scripts/mapboxStyle'
+  import Popver from '../../assets/scripts/popover'
+  import * as PopoverUtil from '../popover'
 //  import $Style from 'ol/style/style'
 //  import $Fill from 'ol/style/fill'
 //  import $Stroke from 'ol/style/stroke'
@@ -30,7 +32,7 @@
       initMap () {
         const layer = new $VectorTile({
           renderBuffer: 100,
-          renderMode: 'hybrid', // 渲染方式image，hybrid，vector，性能由高到低
+          renderMode: 'vector', // 渲染方式image，hybrid，vector，性能由高到低
           preload: 0,
           source: new $VectorSource({
             format: new $FormatMvt(),
@@ -48,7 +50,7 @@
             wrapX: false
           })
         })
-        Vue.prototype.$Map = new $Map({
+        let map = new $Map({
           target: 'main-map',
           layers: [],
           view: new $View({
@@ -57,8 +59,7 @@
           })
         })
         /* eslint new-cap: ["error", { "newIsCap": false }] */
-        let map = new MapBoxStyle(this.$Map, layer, this.$Config.services.$StyleUrl + this.$Config.services.$key)
-        console.log(map)
+        Vue.prototype.$Map = new MapBoxStyle(map, layer, this.$Config.services.$StyleUrl + this.$Config.services.$key)
         Vue.prototype.$View = this.$Map.getView()
         this.$Map.on('click', this.handleMapClick_, this)
         this.$View.on('change:center', this.handelCenter_, this)
@@ -82,16 +83,62 @@
         this.$store.dispatch('actionMapZoom', Math.ceil(zoom))
       },
       handleMapClick_ (event) {
-        console.log(event)
-        if (event && event.pixel) {
-          let feature = this.$Map.forEachFeatureAtPixel(event.pixel, function (feature) {
-            return feature
-          })
-          if (feature) {
-            let attr = feature.getProperties()
-            console.log(attr)
+        let flag = this.removePopopver()
+        if (!flag) {
+          if (event && event.pixel) {
+            let color = [51, 51, 50, 255]
+            this.$Map.forEachLayerAtPixel(event.pixel, function (layer, _color) {
+              console.log(layer)
+              if (_color && _color.length) {
+                color = _color
+              }
+            })
+            let features = this.$Map.getFeaturesAtPixel(event.pixel)
+            if (features) {
+              this.showPopover({
+                center: event.coordinate,
+                id: 'popover',
+                offset: [0, -14],
+                items: [
+                  {
+                    label: '水系',
+                    color: 'rgba(' + color.join(',') + ')'
+                  },
+                  {
+                    label: '陆地',
+                    color: 'rgba(51, 51, 50, 0.9)'
+                  }
+                ]
+              })
+            } else {
+              this.showPopover({
+                center: event.coordinate,
+                id: 'popover',
+                offset: [0, -14],
+                items: [
+                  {
+                    label: '陆地',
+                    color: 'rgba(' + color.join(',') + ')'
+                  }
+                ]
+              })
+            }
           }
         }
+      },
+      showPopover (params) {
+        let element = PopoverUtil.getPopupElement(params)
+        params['element'] = element
+        Vue.prototype.$Popover = new Popver(this.$Map, params)
+        this.$Map.addOverlay(this.$Popover)
+      },
+      removePopopver () {
+        if (this.$Popover) {
+          this.$Map.removeOverlay(this.$Popover)
+          Vue.prototype.$Popover = null
+          return true
+        }
+        return false
       }
     }
   }
