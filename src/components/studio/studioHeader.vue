@@ -1,12 +1,12 @@
 <template>
   <div class="studio-header clearfix">
     <div class="map-action">
-      <el-tooltip
+      <Tooltip
         v-for="action in actions"
         :key="action.alias"
         class="item" effect="dark" :content="action.tooltip" placement="bottom">
         <i class="iconfont" :class="action.icon"></i>
-      </el-tooltip>
+      </Tooltip>
     </div>
     <a class="out-icon" @click="publish()">
       <i class="iconfont icon-zititubiaotuichu"></i>
@@ -47,14 +47,14 @@
     </div>
     <div class="map-redo">
       <span class="disable" id="style-undo">
-        <el-tooltip class="item" effect="dark" content="撤销" placement="bottom">
+        <Tooltip class="item" effect="dark" content="撤销" placement="bottom">
           <i class="iconfont icon-huitui"></i>
-        </el-tooltip>
+        </Tooltip>
       </span>
       <span class="disable" id="style-redo">
-        <el-tooltip class="item" effect="dark" content="重做" placement="bottom">
+        <Tooltip class="item" effect="dark" content="重做" placement="bottom">
           <i class="iconfont icon-huitui"></i>
-        </el-tooltip>
+        </Tooltip>
       </span>
     </div>
   </div>
