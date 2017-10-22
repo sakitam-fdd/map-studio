@@ -169,7 +169,7 @@
     user-select: none;
     .map-action {
       float: right;
-      i.item {
+      div.item {
         margin-right: 38px;
         &:hover {
           cursor: pointer;

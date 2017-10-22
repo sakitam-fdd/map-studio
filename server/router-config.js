@@ -1,0 +1,11 @@
+'use strict'
+const config = require('config')
+const router = require('koa-router')
+const user = require('./controllers/user')
+const routerPrefix = config.get('routerPrefix')
+exports.api = router({ prefix: routerPrefix.api })
+  .get('/user', user.list)
+  .post('/user/login', user.login)
+  .post('/user/update', user.update)
+  .post('/user/logout', user.logout)
+  .post('/user/register', user.register)
