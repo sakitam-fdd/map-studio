@@ -46,6 +46,7 @@
     width: 100vw
     height: 100vh
     display: flex
+    z-index: 999
     justify-content: center
     align-items: center
     .counter

@@ -41,8 +41,9 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-family: '微软雅黑', 'Avenir', Helvetica, Arial, sans-serif;
-    font-size: 13px;
+    font-family: Helvetica Neue For Number,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
     color: #3a3a3a;
   }
   #app {

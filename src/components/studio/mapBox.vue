@@ -14,12 +14,6 @@
   import MapBoxStyle from '../../assets/scripts/mapboxStyle'
   import Popver from '../../assets/scripts/popover'
   import * as PopoverUtil from '../popover'
-//  import $Style from 'ol/style/style'
-//  import $Fill from 'ol/style/fill'
-//  import $Stroke from 'ol/style/stroke'
-//  import $Icon from 'ol/style/icon'
-//  import $Text from 'ol/style/text'
-//  import { createMapboxStreetsV6Style } from '../../assets/scripts/mapbox-streets-v6-style'
   export default {
     data () {
       return {
@@ -50,7 +44,7 @@
             wrapX: false
           })
         })
-        let map = new $Map({
+        Vue.prototype.$Map = new $Map({
           target: 'main-map',
           layers: [],
           view: new $View({
@@ -58,8 +52,8 @@
             zoom: 4
           })
         })
-        /* eslint new-cap: ["error", { "newIsCap": false }] */
-        Vue.prototype.$Map = new MapBoxStyle(map, layer, this.$Config.services.$StyleUrl + this.$Config.services.$key)
+        /* eslint-disable no-new */
+        new MapBoxStyle(this.$Map, layer, this.$Config.services.$StyleUrl + this.$Config.services.$key)
         Vue.prototype.$View = this.$Map.getView()
         this.$Map.on('click', this.handleMapClick_, this)
         this.$View.on('change:center', this.handelCenter_, this)
@@ -88,7 +82,6 @@
           if (event && event.pixel) {
             let color = [51, 51, 50, 255]
             this.$Map.forEachLayerAtPixel(event.pixel, function (layer, _color) {
-              console.log(layer)
               if (_color && _color.length) {
                 color = _color
               }

@@ -339,9 +339,8 @@
       }
       #style-redo {
         margin-left: 18px;
-        i:before {
-          transform: rotateZ(180deg);
-          -webkit-transform: rotateZ(180deg); /* Safari 与 Chrome */
+        .item {
+          transform: rotateY(180deg);
         }
       }
       .disable i {
